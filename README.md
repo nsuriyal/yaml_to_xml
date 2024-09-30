@@ -1,66 +1,252 @@
-# Simple YAML to XML
-Script converter of YAML to XML. Written in Python 3
-
-## Example
-
-```yaml
-sample: file
-list:
-    example 1
-    example 2
-items:
-    - name: example1
-      price: 2
-
-    - name: example2
-      price: 3
-```
-
-Result in
-
-```xml
-<list>example 1 example 2
-</list>
-<sample>file</sample>
-<items>
-  <price>2</price>
-  <name>example1</name>
-</items>
-<items>
-  <price>3</price>
-  <name>example2</name>
-</items>
-```
-
-## Information
-* This is a simple script that parses an YAML file to XML
-* This is testing and sampling purposes but can be changed to production ready
-* This should be run in an isolated python environment (virtual env)
-
-## Requirements
-* Python 3.6+
-* Virtual env
-
-## Usage
-This can be executed inside any python environment 3.6+ but I would recommend creating a virtual environment for this purpose and not to break any system
-
-For the user of virtualenv wrapper (my preference), please follow the instructions below:
-
-1. In the command line execute `pip install virtualenvwrapper-win` and linux users `pip install virtualenvwrapper`
-2. Create your virtual env `mkvirtualenv _name_at_your_choice`
-3. Install the requirements inside `pip install -r requirements.txt`
-4. Execute the application `python ./app.py` with the required parameters
-
-E.g.: `python ./app.py -l <location>/<something>.yml -d <localtion>/<something>.xml`
-
-## Parameters
-* `-l` - Location of the file to be parsed (required)
-* `-d` - Destination of the file with the file name after parsing (optional)
-* `-t` - Whether elements get a data type attribute (defaulting to True. E.g.: `<element type="str">`)
-* `-s` - Whether the output should be on the screen (defaulting to False)
-
-You can run the result only on the screen or just destination or both
-
-* Outputting to a file only `python ./app.py -l resources/test.yml -d resources/result.xml -t false -s false`
-* Outputting to a file and screen `python ./app.py -l resources/test.yml -d resources/result.xml -t false`
-* Outputting only to screen `python ./app.py -l resources/test.yml -t false`
+inboundCall:
+  name: Ankit_test_Architect_Flow
+  description: Test flow
+  division: Home
+  startUpRef: "/inboundCall/menus/menu[Main Menu_10]"
+  defaultLanguage: en-us
+  supportedLanguages:
+    en-us:
+      defaultLanguageSkill:
+        noValue: true
+      textToSpeech:
+        defaultEngine:
+          voice: Jill
+  initialGreeting:
+    exp: AudioPlaybackOptions(Append(ToAudioBlank(500), ToAudioTTS("   Thank you for calling Ankit's test service flow")), true)
+  settingsActionDefaults:
+    playAudioOnSilence:
+      timeout:
+        lit:
+          seconds: 40
+    detectSilence:
+      timeout:
+        lit:
+          seconds: 40
+    callData:
+      processingPrompt:
+        noValue: true
+    collectInput:
+      noEntryTimeout:
+        lit:
+          seconds: 5
+    dialByExtension:
+      interDigitTimeout:
+        lit:
+          seconds: 6
+    transferToUser:
+      connectTimeout:
+        noValue: true
+    transferToNumber:
+      connectTimeout:
+        noValue: true
+    transferToGroup:
+      connectTimeout:
+        noValue: true
+    transferToFlowSecure:
+      connectTimeout:
+        lit:
+          seconds: 15
+  settingsErrorHandling:
+    errorHandling:
+      disconnect:
+        none: true
+    preHandlingAudio:
+      tts: Sorry, an error occurred. Please try your call again.
+  settingsMenu:
+    extensionDialingMaxDelay:
+      lit:
+        seconds: 1
+    listenForExtensionDialing:
+      lit: true
+    menuSelectionTimeout:
+      lit:
+        seconds: 10
+    repeatCount:
+      lit: 3
+  settingsPrompts:
+    ensureAudioInPrompts: false
+    promptMediaToValidate:
+      - mediaType: audio
+      - mediaType: tts
+  settingsSpeechRec:
+    completeMatchTimeout:
+      lit:
+        ms: 100
+    incompleteMatchTimeout:
+      lit:
+        ms: 1500
+    maxSpeechLengthTimeout:
+      lit:
+        seconds: 20
+    minConfidenceLevel:
+      lit: 50
+    asrCompanyDir: none
+    asrEnabledOnFlow: false
+    suppressRecording: false
+  menus:
+    - menu:
+        name: Main Menu
+        refId: Main Menu_10
+        audio:
+          exp: AudioPlaybackOptions(ToAudioBlank(100), true)
+        settingsMenu:
+          extensionDialingMaxDelay:
+            noValue: true
+          listenForExtensionDialing:
+            lit: false
+          menuSelectionTimeout:
+            lit:
+              ms: 0
+          repeatCount:
+            lit: 0
+        settingsSpeechRec:
+          completeMatchTimeout:
+            noValue: true
+          incompleteMatchTimeout:
+            noValue: true
+          maxSpeechLengthTimeout:
+            noValue: true
+          minConfidenceLevel:
+            noValue: true
+        choices:
+          - menuTransferToAcd:
+              name: Transfer to ACD
+              refId: Transfer to ACD_12
+              dtmf: digit_1
+              globalDtmf: false
+              globalSpeechRecTerms: false
+              targetQueue:
+                lit:
+                  name: Ankit_test_Queue
+              acdSkills:
+                - acdSkill:
+                    lit:
+                      name: Ankit_test_Skill
+              preTransferAudio:
+                tts: Please wait for the next available  agent
+              failureTransferAudio:
+                tts: Sorry, we were unable to complete the  transfer
+              priority:
+                lit: 5
+              preferredAgents:
+                noValue: true
+              languageSkill:
+                noValue: true
+              failureOutputs:
+                errorType:
+                  noValue: true
+                errorMessage:
+                  noValue: true
+          - menuTask:
+              name: New Task 1
+              dtmf: digit_3
+              globalDtmf: false
+              globalSpeechRecTerms: false
+              task:
+                actions:
+                  - evaluateScheduleGroup:
+                      name: Evaluate Schedule Group
+                      inServiceSchedules:
+                        noValue: true
+                      evaluate:
+                        now: true
+                      scheduleGroup:
+                        lit:
+                          name: Ankit_Test_Schedule_Group
+                        name: Ankit_Test_Schedule_Group
+                      emergencyGroup:
+                        noValue: true
+                      outputs:
+                        open:
+                          actions:
+                            - dataTableLookup:
+                                name: Data Table Lookup
+                                lookupValue:
+                                  exp: Prompt.Ankit_Test_Selectlang
+                                dataTable:
+                                  Ankit_test_DT:
+                                    foundOutputs:
+                                      Queue name:
+                                        noValue: true
+                                      Audio:
+                                        noValue: true
+                                    failureOutputs:
+                                      errorType:
+                                        noValue: true
+                                      errorMessage:
+                                        noValue: true
+                                outputs:
+                                  found:
+                                    actions:
+                                      - transferToAcd:
+                                          name: Transfer to ACD
+                                          targetQueue:
+                                            lit:
+                                              name: Ankit_test_Queue
+                                          acdSkills:
+                                            - acdSkill:
+                                                lit:
+                                                  name: Ankit_test_Skill
+                                          preTransferAudio:
+                                            tts: Connecting you shortly
+                                          failureTransferAudio:
+                                            tts: Sorry all agents are busy
+                                          priority:
+                                            lit: 5
+                                          preferredAgents:
+                                            noValue: true
+                                          languageSkill:
+                                            noValue: true
+                                          failureOutputs:
+                                            errorType:
+                                              noValue: true
+                                            errorMessage:
+                                              noValue: true
+                                          outputs:
+                                            failure:
+                                              actions:
+                                                - flushAudio:
+                                                    name: Flush Audio
+                                  notFound:
+                                    actions:
+                                      - playAudio:
+                                          name: Play Audio
+                                          audio:
+                                            tts: Not found
+                                  failure:
+                                    actions:
+                                      - playAudio:
+                                          name: Play Audio
+                                          audio:
+                                            tts: Failure
+                        closed:
+                          actions:
+                            - transferToFlow:
+                                name: Transfer to Flow
+                                targetFlow:
+                                  name: Ankit_Closed_CF_Test
+                                preTransferAudio:
+                                  tts: Closed flow
+                                failureTransferAudio:
+                                  tts: closed flow
+                                failureOutputs:
+                                  errorType:
+                                    noValue: true
+                                  errorMessage:
+                                    noValue: true
+                                outputs:
+                                  failure:
+                                    actions:
+                                      - flushAudio:
+                                          name: Flush Audio
+                        holiday:
+                          actions:
+                            - flushAudio:
+                                name: Flush Audio
+                        emergency:
+                          actions:
+                            - flushAudio:
+                                name: Flush Audio
+                  - disconnect:
+                      name: Disconnect
+        defaultChildMenuRef: "./choices/menuTransferToAcd[Transfer to ACD_12]"
